@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orbitask — Team Task Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<!-- AUTH PAGE -->
+<div id="auth-page" class="page active">
+  <div class="auth-bg">
+    <div class="auth-orb orb1"></div><div class="auth-orb orb2"></div><div class="auth-orb orb3"></div>
+    <div class="grid-lines"></div>
+  </div>
+  <div class="auth-container">
+    <div class="auth-brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="18" stroke="url(#g1)" stroke-width="2"/><circle cx="20" cy="20" r="10" stroke="url(#g1)" stroke-width="1.5"/><circle cx="20" cy="20" r="3" fill="url(#g1)"/><circle cx="20" cy="2" r="2.5" fill="#00e5ff"/><circle cx="38" cy="20" r="2" fill="#a855f7"/><defs><linearGradient id="g1" x1="2" y1="2" x2="38" y2="38" gradientUnits="userSpaceOnUse"><stop stop-color="#00e5ff"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs></svg>
+      </div>
+      <h1 class="brand-name">Orbitask</h1>
+      <p class="brand-tagline">Mission Control for Your Team</p>
+    </div>
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="login-tab" onclick="switchAuthTab('login')">Sign In</button>
+        <button class="auth-tab" id="signup-tab" onclick="switchAuthTab('signup')">Sign Up</button>
+        <div class="tab-indicator" id="tab-indicator"></div>
+      </div>
+      <form id="login-form" class="auth-form active" onsubmit="handleLogin(event)">
+        <div class="form-group"><label>Email Address</label><div class="input-wrapper"><span class="input-icon">✉</span><input type="email" id="login-email" placeholder="your@email.com" required></div></div>
+        <div class="form-group"><label>Password</label><div class="input-wrapper"><span class="input-icon">🔒</span><input type="password" id="login-password" placeholder="••••••••" required><button type="button" class="toggle-pw" onclick="togglePassword('login-password')">👁</button></div></div>
+        <div class="demo-hint"><span>🚀 Admin:</span> admin@taskmanager.com / Admin@123</div>
+        <button type="submit" class="btn-primary auth-submit" id="login-btn"><span>Launch Mission</span><div class="btn-glow"></div></button>
+        <div id="login-error" class="form-error"></div>
+      </form>
+      <form id="signup-form" class="auth-form" onsubmit="handleSignup(event)">
+        <div class="form-group"><label>Full Name</label><div class="input-wrapper"><span class="input-icon">👤</span><input type="text" id="signup-name" placeholder="Jane Smith" required></div></div>
+        <div class="form-group"><label>Email Address</label><div class="input-wrapper"><span class="input-icon">✉</span><input type="email" id="signup-email" placeholder="your@email.com" required></div></div>
+        <div class="form-group"><label>Password</label><div class="input-wrapper"><span class="input-icon">🔒</span><input type="password" id="signup-password" placeholder="Min. 6 characters" required><button type="button" class="toggle-pw" onclick="togglePassword('signup-password')">👁</button></div></div>
+        <button type="submit" class="btn-primary auth-submit" id="signup-btn"><span>Join the Mission</span><div class="btn-glow"></div></button>
+        <div id="signup-error" class="form-error"></div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- APP PAGE -->
+<div id="app-page" class="page">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="brand-icon-sm"><svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="url(#sg)" stroke-width="1.5"/><circle cx="16" cy="16" r="7" stroke="url(#sg)" stroke-width="1.2"/><circle cx="16" cy="16" r="2.5" fill="url(#sg)"/><circle cx="16" cy="2" r="2" fill="#00e5ff"/><defs><linearGradient id="sg" x1="2" y1="2" x2="30" y2="30" gradientUnits="userSpaceOnUse"><stop stop-color="#00e5ff"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs></svg></div>
+        <span>Orbitask</span>
+      </div>
+      <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" data-page="dashboard" onclick="navigate('dashboard');return false;"><span class="nav-icon">⬡</span><span class="nav-label">Dashboard</span></a>
+      <a href="#" class="nav-item" data-page="projects" onclick="navigate('projects');return false;"><span class="nav-icon">◈</span><span class="nav-label">Projects</span></a>
+      <a href="#" class="nav-item admin-only hidden" data-page="admin" onclick="navigate('admin');return false;"><span class="nav-icon">⬧</span><span class="nav-label">Admin Panel</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-card"><div class="user-avatar" id="sidebar-avatar">?</div><div class="user-info"><div class="user-name" id="sidebar-name">Loading...</div><div class="user-role" id="sidebar-role">—</div></div></div>
+      <button class="logout-btn" onclick="logout()">↪ Sign Out</button>
+    </div>
+  </aside>
+  <main class="main-content">
+    <section id="page-dashboard" class="content-page active">
+      <div class="page-header">
+        <div><h2 class="page-title" id="dashboard-greeting">Good Morning</h2><p class="page-subtitle">Here's what's happening across your missions</p></div>
+        <div class="header-actions"><button class="btn-secondary" onclick="navigate('projects')">View All Projects →</button></div>
+      </div>
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card loading"><div class="skeleton-box" style="height:60px"></div></div>
+        <div class="stat-card loading"><div class="skeleton-box" style="height:60px"></div></div>
+        <div class="stat-card loading"><div class="skeleton-box" style="height:60px"></div></div>
+        <div class="stat-card loading"><div class="skeleton-box" style="height:60px"></div></div>
+      </div>
+      <div class="dashboard-grid">
+        <div class="dashboard-card"><h3 class="card-title">Recent Tasks</h3><div id="recent-tasks-list" class="task-list-mini"><div class="loading-placeholder">Loading...</div></div></div>
+        <div class="dashboard-card"><h3 class="card-title">Task Status Overview</h3><div id="status-chart" class="status-chart-container"></div><div id="status-legend" class="status-legend"></div></div>
+        <div class="dashboard-card wide"><h3 class="card-title">Active Projects</h3><div id="dashboard-projects" class="dashboard-projects-list"><div class="loading-placeholder">Loading...</div></div></div>
+      </div>
+    </section>
+    <section id="page-projects" class="content-page">
+      <div class="page-header">
+        <div><h2 class="page-title">Projects</h2><p class="page-subtitle">Manage your team's missions</p></div>
+        <button class="btn-primary" onclick="openCreateProjectModal()">+ New Project</button>
+      </div>
+      <div id="projects-grid" class="projects-grid"><div class="loading-placeholder">Loading...</div></div>
+    </section>
+    <section id="page-project-detail" class="content-page">
+      <div class="page-header">
+        <div class="back-header">
+          <button class="btn-back" onclick="navigate('projects')">← Back</button>
+          <div><h2 class="page-title" id="project-detail-name">Project</h2><p class="page-subtitle" id="project-detail-desc"></p></div>
+        </div>
+        <div class="header-actions">
+          <button class="btn-secondary" onclick="openAddMemberModal()">+ Member</button>
+          <button class="btn-primary" onclick="openCreateTaskModal()">+ Task</button>
+        </div>
+      </div>
+      <div class="project-meta-bar" id="project-meta-bar"></div>
+      <div class="kanban-board">
+        <div class="kanban-col"><div class="kanban-col-header"><span class="col-dot todo-dot"></span><span class="col-title">To Do</span><span class="col-count" id="count-TODO">0</span></div><div class="kanban-cards" id="cards-TODO" ondragover="allowDrop(event)" ondrop="drop(event,'TODO')"></div></div>
+        <div class="kanban-col"><div class="kanban-col-header"><span class="col-dot progress-dot"></span><span class="col-title">In Progress</span><span class="col-count" id="count-IN_PROGRESS">0</span></div><div class="kanban-cards" id="cards-IN_PROGRESS" ondragover="allowDrop(event)" ondrop="drop(event,'IN_PROGRESS')"></div></div>
+        <div class="kanban-col"><div class="kanban-col-header"><span class="col-dot review-dot"></span><span class="col-title">In Review</span><span class="col-count" id="count-IN_REVIEW">0</span></div><div class="kanban-cards" id="cards-IN_REVIEW" ondragover="allowDrop(event)" ondrop="drop(event,'IN_REVIEW')"></div></div>
+        <div class="kanban-col"><div class="kanban-col-header"><span class="col-dot done-dot"></span><span class="col-title">Done</span><span class="col-count" id="count-DONE">0</span></div><div class="kanban-cards" id="cards-DONE" ondragover="allowDrop(event)" ondrop="drop(event,'DONE')"></div></div>
+      </div>
+    </section>
+    <section id="page-admin" class="content-page">
+      <div class="page-header"><div><h2 class="page-title">Admin Panel</h2><p class="page-subtitle">System overview &amp; user management</p></div></div>
+      <div class="admin-grid"><div class="admin-card"><h3 class="card-title">All Users</h3><div id="users-table-container"><div class="loading-placeholder">Loading...</div></div></div></div>
+    </section>
+  </main>
+</div>
+<!-- MODALS -->
+<div id="modal-project" class="modal-overlay" onclick="closeModal('modal-project')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header"><h3 id="project-modal-title">New Project</h3><button class="modal-close" onclick="closeModal('modal-project')">✕</button></div>
+    <form onsubmit="handleSaveProject(event)">
+      <div class="form-group"><label>Project Name *</label><input type="text" id="project-name-input" placeholder="e.g. Phoenix Redesign" required></div>
+      <div class="form-group"><label>Description</label><textarea id="project-desc-input" rows="3" placeholder="What's this project about?"></textarea></div>
+      <div class="form-group"><label>Status</label><select id="project-status-input"><option value="ACTIVE">Active</option><option value="COMPLETED">Completed</option><option value="ARCHIVED">Archived</option></select></div>
+      <div class="modal-actions"><button type="button" class="btn-secondary" onclick="closeModal('modal-project')">Cancel</button><button type="submit" class="btn-primary">Save Project</button></div>
+    </form>
+  </div>
+</div>
+<div id="modal-task" class="modal-overlay" onclick="closeModal('modal-task')">
+  <div class="modal modal-lg" onclick="event.stopPropagation()">
+    <div class="modal-header"><h3 id="task-modal-title">New Task</h3><button class="modal-close" onclick="closeModal('modal-task')">✕</button></div>
+    <form onsubmit="handleSaveTask(event)">
+      <div class="form-group"><label>Task Title *</label><input type="text" id="task-title-input" placeholder="What needs to be done?" required></div>
+      <div class="form-group"><label>Description</label><textarea id="task-desc-input" rows="3" placeholder="Task details..."></textarea></div>
+      <div class="form-row">
+        <div class="form-group flex-1"><label>Status</label><select id="task-status-input"><option value="TODO">To Do</option><option value="IN_PROGRESS">In Progress</option><option value="IN_REVIEW">In Review</option><option value="DONE">Done</option></select></div>
+        <div class="form-group flex-1"><label>Priority</label><select id="task-priority-input"><option value="LOW">Low</option><option value="MEDIUM" selected>Medium</option><option value="HIGH">High</option><option value="CRITICAL">Critical</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group flex-1"><label>Assignee</label><select id="task-assignee-input"><option value="">Unassigned</option></select></div>
+        <div class="form-group flex-1"><label>Due Date</label><input type="date" id="task-due-input"></div>
+      </div>
+      <div class="modal-actions"><button type="button" class="btn-secondary" onclick="closeModal('modal-task')">Cancel</button><button type="submit" class="btn-primary">Save Task</button></div>
+    </form>
+  </div>
+</div>
+<div id="modal-member" class="modal-overlay" onclick="closeModal('modal-member')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header"><h3>Add Team Member</h3><button class="modal-close" onclick="closeModal('modal-member')">✕</button></div>
+    <div class="form-group"><label>Select User</label><select id="member-user-select"><option value="">Choose a user...</option></select></div>
+    <div class="modal-actions"><button class="btn-secondary" onclick="closeModal('modal-member')">Cancel</button><button class="btn-primary" onclick="handleAddMember()">Add Member</button></div>
+  </div>
+</div>
+<div id="modal-task-detail" class="modal-overlay" onclick="closeModal('modal-task-detail')">
+  <div class="modal modal-lg" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 id="task-detail-title">Task</h3>
+      <div style="display:flex;gap:8px;align-items:center"><button class="btn-icon" onclick="editCurrentTask()">✏</button><button class="btn-icon danger" onclick="deleteCurrentTask()">🗑</button><button class="modal-close" onclick="closeModal('modal-task-detail')">✕</button></div>
+    </div>
+    <div id="task-detail-body"></div>
+  </div>
+</div>
+<div id="toast-container" class="toast-container"></div>
+<script src="/js/api.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>
